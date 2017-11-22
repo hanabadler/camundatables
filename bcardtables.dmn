@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="definitions_1tgz6v4" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="ageRisk" name="AgeRisk">
+    <extensionElements>
+      <biodi:bounds x="200" y="200" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="decisionTable">
+      <input id="input1" label="Age" camunda:inputVariable="">
+        <inputExpression id="inputExpression1" typeRef="double">
+          <text>age</text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="Risk" name="risk" typeRef="double" />
+      <rule id="row-820578747-1">
+        <inputEntry id="UnaryTests_0ct0nsl">
+          <text><![CDATA[< 18]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gsb6dr">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-820578747-2">
+        <inputEntry id="UnaryTests_15tt67g">
+          <text>]18..65[</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_025r3bq">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-820578747-3">
+        <inputEntry id="UnaryTests_0ye5tdz">
+          <text><![CDATA[> 65]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0i52e8n">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="ResidenscyRisk" name="ResidenscyRisk">
+    <extensionElements>
+      <biodi:bounds x="199" y="299" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_1bmfv5v">
+      <input id="InputClause_12yn4op" label="Residency" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_0sm8b7t" typeRef="string">
+          <text>residency</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0kykfb3" label="Risk" name="risk" typeRef="double" />
+      <rule id="row-820578747-4">
+        <inputEntry id="UnaryTests_17eptnf">
+          <text><![CDATA["Israel"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ytovd8">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-820578747-5">
+        <inputEntry id="UnaryTests_1v1t6uf">
+          <text><![CDATA["West Bank"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1bd3279">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-820578747-6">
+        <inputEntry id="UnaryTests_0yabscs">
+          <text><![CDATA["Gaza Strip"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1mj1isj">
+          <text>50</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-820578747-7">
+        <inputEntry id="UnaryTests_1blz5ww">
+          <text><![CDATA["Foreign"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_01my20r">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="registeredidtype" name="Registered ID Type">
+    <extensionElements>
+      <biodi:bounds x="199" y="402" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_1t73fgu">
+      <input id="InputClause_001sg2g" label="RegisteredID" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_0mhpyks" typeRef="string">
+          <text>registeredId</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0k7xlwx" label="RISK" name="risk" typeRef="double" />
+      <rule id="row-235534213-1">
+        <inputEntry id="UnaryTests_0qymbh7">
+          <text><![CDATA["Blue ID"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_08draue">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-2">
+        <inputEntry id="UnaryTests_0jamlo3">
+          <text><![CDATA["Green ID"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1j0gl6z">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-3">
+        <inputEntry id="UnaryTests_18rbksj">
+          <text><![CDATA["Foreign Passport"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1oeyn5c">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="gender" name="Gender">
+    <extensionElements>
+      <biodi:bounds x="198" y="505" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_0w8kyf0">
+      <input id="InputClause_0azc8bm" label="Gender" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_1pzwelw" typeRef="string">
+          <text>gender</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_055msyq" label="Risk" name="risk" typeRef="double" />
+      <rule id="row-235534213-6">
+        <inputEntry id="UnaryTests_0ncizvl">
+          <text><![CDATA["Male"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_028913c">
+          <text>1</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-7">
+        <inputEntry id="UnaryTests_1vh1wbz">
+          <text><![CDATA["Female"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1fw062b">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="passwordresettbl" name="PW Reset (in 24 hours)">
+    <extensionElements>
+      <biodi:bounds x="197" y="607" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_0n1uvzn">
+      <input id="InputClause_0yobou4" label="PW Reset (in 24 hours)" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_08h1dq2" typeRef="double">
+          <text>passwordreset</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0i9j5hm" label="PW Reset (in 24 hours)" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_15glncs" typeRef="double">
+          <text>hours</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1naf44e" label="Risk" name="risk" typeRef="double" />
+      <rule id="row-235534213-11">
+        <inputEntry id="UnaryTests_1b3edfj">
+          <text>1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jyil90">
+          <text><![CDATA[<= 24]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0baps52">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-12">
+        <inputEntry id="UnaryTests_1865jfa">
+          <text>2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19ji87t">
+          <text><![CDATA[<= 24]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0am5sl4">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-13">
+        <inputEntry id="UnaryTests_0mdbsyy">
+          <text><![CDATA[> 2]]></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0racwne">
+          <text><![CDATA[<= 72]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_08cso77">
+          <text>20</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="emailresettbl" name="Email Reset (in 24 hours)">
+    <extensionElements>
+      <biodi:bounds x="194" y="704" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_07zll2s">
+      <input id="InputClause_0qle7k2" label="Email Reset (in 24 hours)" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_16jhzss" typeRef="double">
+          <text>emailreset</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1qh0ssj" label="Hours" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_01n147j" typeRef="double">
+          <text>hours</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0xdlhgi" label="Risk" name="risk" typeRef="double" />
+      <rule id="row-235534213-14">
+        <inputEntry id="UnaryTests_1pac8xg">
+          <text>1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0oordda">
+          <text><![CDATA[<= 24]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_06pgh8h">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-15">
+        <inputEntry id="UnaryTests_1vxj0sm">
+          <text>2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tdol3j">
+          <text><![CDATA[<= 24]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05esv06">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-16">
+        <inputEntry id="UnaryTests_1cf9pb7">
+          <text><![CDATA[> 2]]></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1mtnozf">
+          <text><![CDATA[<= 72]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_01rbsjs">
+          <text>20</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="historytbl" name="History">
+    <extensionElements>
+      <biodi:bounds x="195" y="809" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_0o5mqvf">
+      <input id="InputClause_1pd8lgj" label="History" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_18gszk6" typeRef="boolean">
+          <text>history</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1vfecaa" label="" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_1ddlh1o" typeRef="string">
+          <text>history</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0yyj890" label="Risk" name="risk" typeRef="double" />
+      <rule id="row-235534213-17">
+        <inputEntry id="UnaryTests_15i23au">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_05ly428">
+          <text><![CDATA["Chargeback"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1vc76x3">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-18">
+        <inputEntry id="UnaryTests_1n39gk9">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1719rdw">
+          <text><![CDATA["Fraud"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1aihq5e">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-19">
+        <inputEntry id="UnaryTests_0mqs2tl">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zu5ek2">
+          <text><![CDATA["1+ case of charge or fraud"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1v821lo">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-20">
+        <inputEntry id="UnaryTests_1o38gwu">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10mi2ix">
+          <text><![CDATA["filed a CTR"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_03x07ri">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-21">
+        <inputEntry id="UnaryTests_10n93vc">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ei5zjr">
+          <text><![CDATA["filed a SAR"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_00c8g5c">
+          <text>15</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-22">
+        <inputEntry id="UnaryTests_01eo076">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1einycn">
+          <text><![CDATA["WC hit"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0unqdbn">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-235534213-23">
+        <inputEntry id="UnaryTests_157fw2i">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0s6i4fd">
+          <text><![CDATA["Total traffic of last 6 months above X amount"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10l54d5">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
