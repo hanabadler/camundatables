@@ -57,3 +57,21 @@ then
   let url=to_string("https:<>/updateCardHolderAddressM2");
   UpdateAddressInfoM2Function(PublicToken, Address, City, Country, userApp, userAppPass, toDebug, url);
 end
+
+
+stage 1
+========================================
+rule "function dev operation Email Voucher store in couchdb TESTING "
+when
+  //to_string($message.action) == "sendVoucherMail"
+  true
+then
+  let customer_id = "1511"; //to_string($message.CustomerID); //1511
+  let file_path   = "http://<>:<>/tracker/customerId_1578_doctype_Voucher_time_1511478186174";
+  let file_name   ="customerId_1578_doctype_Voucher_time_1511478186174";
+  let note        = "";
+  let documentation_type_id ="";
+  let id_user     ="";
+  let url         = "https://<>/prcUpdateDocumentation";
+  UpdateDocumantatitionInfoBraundFunction(customer_id, file_path, file_name, note, documentation_type_id, id_user, "false", url);
+end
