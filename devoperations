@@ -15,11 +15,27 @@ when
 then
   let To = to_string($message.Email);             //ok
   let name = to_string($message.FirstName);       //ok
-  let From = to_string("support@braundcard.com"); //ok
+  let From = to_string("support@com"); //ok
   let Subject = to_string($message.Subject);      //ok
   let message = to_string($message.Body);         //ok
   
   let autorizationBearer = to_string("");
   let sendgridUrl = to_string("https://api.sendgrid.com/v3/mail/send"); 
   SendToMailUsingSendGridFunction(To, name, From, Subject, message, autorizationBearer, sendgridUrl) ;
+end
+
+
+rule "function dev operation updateNamePhoneM2 PROD"
+when
+  to_string($message.action) == "updateNamePhoneM2"
+then
+  let PublicToken=to_string($message.PublicToken);
+  let firstName=to_string($message.firstName);
+  let lastName=to_string($message.lastName);
+  let tel=to_string($message.phone);
+  let userApp=to_string("");
+  let userAppPass=to_string("");
+  let toDebug=to_string("false");
+  let url=to_string("https://<place path to REST>/UpdateCardHolderuNameAndPhoneM2");
+  UpdateCardHolderuNameAndPhoneM2(PublicToken, firstName, lastName, tel, userApp, userAppPass, toDebug, url);
 end
