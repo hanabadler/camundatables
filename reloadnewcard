@@ -1,0 +1,33 @@
+stage 1
+===================================================================================
+
+rule "reload card function send to hive message finaltotalscore  > 100"
+when
+  to_long($message.totalscore) > to_long(100) and to_string($message.action) == "reloadcard" 
+then
+
+  set_field("functionsendtohivetesthere","function send to hive test");  
+  let url = ""; 
+  let bearer = "";
+  let jsonBody = "";
+  let alertmeta="reload card  Risk Alert test,Alert Created due to several risk factors test,Risk Rules Alert,2,hiveartifacts,3";
+  let WithDebug = "false";
+  SendToHiveFunction(url, bearer, jsonBody, alertmeta, WithDebug) ;
+end
+
+
+
+
+rule "newcard function send to hive message finaltotalscore  > 100"
+when
+  to_long($message.totalscore) > to_long(100) and to_string($message.action) == "newcard" 
+then
+  set_field("functionsendtohivetesthere","function send to hive test");  
+  let url = ""; 
+  let bearer = "";
+  let jsonBody = "";
+  let alertmeta="card Sale  Risk Alert test,Alert Created due to several risk factors test,Risk Rules Alert,2,hiveartifacts,3";
+  let WithDebug = "false";
+  SendToHiveFunction(url, bearer, jsonBody, alertmeta, WithDebug) ;
+end
+
