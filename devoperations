@@ -39,3 +39,21 @@ then
   let url=to_string("https://<place path to REST>/UpdateCardHolderuNameAndPhoneM2");
   UpdateCardHolderuNameAndPhoneM2(PublicToken, firstName, lastName, tel, userApp, userAppPass, toDebug, url);
 end
+
+
+rule "function dev operation UpdateAddressInfoM2 PROD"
+when
+  to_string($message.action) == "updateAddressM2"
+then
+  let PublicToken=to_string($message.PublicToken); //ok
+  let Address=to_string($message.Address);
+  let City=to_string($message.City);
+  let Country=to_string($message.Country);
+  
+  
+  let userApp=to_string("");
+  let userAppPass=to_string("");
+  let toDebug=to_string("false");
+  let url=to_string("https:<>/updateCardHolderAddressM2");
+  UpdateAddressInfoM2Function(PublicToken, Address, City, Country, userApp, userAppPass, toDebug, url);
+end
