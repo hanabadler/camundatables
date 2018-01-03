@@ -1,0 +1,189 @@
+STAGE0
+==================================================================
+rule "camunda function eval gender Risk" 
+when
+    to_string($message.action) == "newcustomer" 
+    
+then
+
+  set_field("start1genderRisk","startgnderrule");
+  let url     = "https://<>:8443/engine-rest/decision-definition";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "gender", "false" ,"pass:pass"));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"gender\" : {\"value\" : \"${gender_id}\", \"type\" : \"double\" }}}");
+  //let jsonBody = StrSubstitutor("{\"variables\" : {\"gender\" : {\"value\" : \"1\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "pass:pass")) ;
+  set_field("genderRisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"gender ${genderRisk}\", \"tags\": [\"score=${genderRisk}\",\"category=Gender Risk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+
+rule "camunda function eval Deposit Hour Risk" 
+when
+  to_string($message.action) == "newcustomer"
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "when", "false" ,":"));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"when\" : {\"value\" : \"${openhour}\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", ":")) ;
+  set_field("whenrisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"when ${whenrisk}\", \"tags\": [\"score=${whenrisk}\",\"category=When Risk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+
+rule "camunda function eval AgeRisk " 
+when
+  to_string($message.action) == "newcustomer"
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "ageRisk", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"age\" : {\"value\" : \"${age}\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("ageRisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"AgeRisk ${ageRisk}\", \"tags\": [\"score=${ageRisk}\",\"category=Age Risk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+
+rule "camunda function eval IDCOUNTRY " 
+when
+  to_string($message.action) == "newcustomer"
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "residencyrisk", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"residency\" : {\"value\" : \"${ID_number_country_code}\", \"type\" : \"string\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("residencyRisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"residencyRisk ${residencyRisk}\", \"tags\": [\"score=${residencyRisk}\",\"category=residencyRisk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+rule "function TR World Check seq1 PROD"
+when
+      to_string($message.action) == "newcustomer" 
+then
+  let fullnamea = concat(to_string($message.private_name)," ");
+  let fullname  = concat(fullnamea,to_string($message.family_name));
+  let correcenglishname = GoogleTranslateFunction(fullname, "", "false",  "My name is ", "השם שלי");  
+  let input = concat(correcenglishname,to_string($message.input4worldcheck));
+  set_field("worldcheckinputinfo", input);
+  let action = "seq1";
+  let trsetting = "groupId,apiSecret,/v1/,url";
+  let casesystyemid = TRWcFunction(input,action, trsetting );
+  set_field("casesystyemid", casesystyemid);
+end
+
+
+
+rule "camunda function eval Depositor " 
+when
+  to_string($message.action) == "newcustomer"
+then
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "who", "false" ,""));
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"Who\" : {\"value\" : \"${class_id}\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("classidRisk",risk);
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"DEpositor ${classidRisk}\", \"tags\": [\"score=${classidRisk}\",\"category=classidRisk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+end  
+
+
+
+
+STAGE1
+==================================================================
+
+rule "function TR World Check SEQ5 PROD"
+when
+  has_field("SEQ2cSaveacaseIndividualResultcaseSystemId") and 
+  to_string($message.action) == "newcustomer" 
+
+then
+  let input = $message.SEQ2cSaveacaseIndividualResultcaseSystemId;
+  let action = "seq5";
+  let trsetting = "";
+  let trworldcheckresults = TRWcFunction(to_string(input),action, trsetting );
+  set_field("trworldcheckresults", trworldcheckresults);
+end
+
+STAGE2
+==================================================================
+
+
+rule "open account calculatefinalscore"
+when
+  to_string($message.action) == "newcustomer" and to_long($message.totalscore)>0
+then
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "cuttingscores", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"action\" : {\"value\" : \"1\", \"type\" : \"double\" },\"range\" : {\"value\" : \"${totalscore}\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("finaltotalscore",risk);
+
+  //let currentScore  = to_double($message.totalscore);
+  //set_field("totalscore", currentScore + risk);
+  //let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"AgeRisk ${ageRisk}\", \"tags\": [\"score=${ageRisk}\",\"category=Age Risk\"]  }");
+  //SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+
+
+STAGE4
+==================================================================
+
+rule "open account function send to hive message finaltotalscore  > 100"
+when
+  to_long($message.finaltotalscore) > to_long(100) and to_string($message.action) == "newcustomer" 
+then
+
+  set_field("functionsendtohivetesthere","function send to hive test");  
+  let url = "http://<ip>:<port>/api"; 
+  let bearer = "Bearer <bearervalue>";
+  let jsonBody = "";
+  let alertmeta="Open Account Risk Alert test,Alert Created due to several risk factors test,Risk Rules Alert,2,hiveartifacts,3";
+  let WithDebug = "false";
+  SendToHiveFunction(url, bearer, jsonBody, alertmeta, WithDebug) ;
+end
+
+
+rule "open account function release customer finaltotalscore  < 100"
+when
+  to_long($message.finaltotalscore) < to_long(100) and to_string($message.action) == "newcustomer" 
+then
+    let StatusID = "4";
+    let url     =  "https://<domainname>/wp-json/api-extend/v1/UpdateCustomerStatus";
+    UpdateEntityStatusBraundCard(to_string($message.id_customer), StatusID, "", "", "false", url) ;
+end
