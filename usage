@@ -1,0 +1,81 @@
+stage 0
+=========================
+rule "camunda function eval Usage Sum " 
+when
+  to_string($message.action) == "usagetransaction"
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "sum", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"sum\" : {\"value\" : \"${amount}\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("usageSumRisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"usageSumRisk ${usageSumRisk}\", \"tags\": [\"score=${usageSumRisk}\",\"category=usageSumRisk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+
+rule "camunda function eval Usage Location" 
+when
+  to_string($message.action) == "usagetransaction"
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "location", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"location\" : {\"value\" : \"${usagecoountrycode}\", \"type\" : \"string\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("usagelocationRisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"usagelocationRisk ${usagelocationRisk}\", \"tags\": [\"score=${usagelocationRisk}\",\"category=usagelocationRisk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+rule "camunda function eval Usage chipStatus" 
+when
+  to_string($message.action) == "usagetransaction"
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "chipStatus", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"chipstatus\" : {\"value\" : \"${chipstatus}\", \"type\" : \"string\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("chipstatusRisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"chipstatusRisk ${chipstatusRisk}\", \"tags\": [\"score=${chipstatusRisk}\",\"category=chipstatusRisk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
+
+
+stage1
+================================
+
+rule "usage transaction function send to hive message finaltotalscore  > 100"
+when
+  to_long($message.totalscore) > to_long(100) and to_string($message.action) == "usagetransaction" 
+then
+
+  set_field("functionsendtohivetesthere","function send to hive test");  
+  let url = ""; 
+  let bearer = "Bearer ";
+  let jsonBody = "";
+  let alertmeta="Usage Transaction Risk Alert test,Alert Created due to several risk factors test,Risk Rules Alert,2,hiveartifacts,3";
+  let WithDebug = "false";
+  SendToHiveFunction(url, bearer, jsonBody, alertmeta, WithDebug) ;
+end
