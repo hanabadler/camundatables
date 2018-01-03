@@ -7,3 +7,19 @@ then
   let From  = "place form";
   SendToSMSUsingTwilioFunction(to_string($message.Body), to_string($message.To), From, Sid, Token, "false") ;
 end
+
+
+rule "function dev operation Email Voucher"
+when
+  to_string($message.action) == "sendVoucherMail"
+then
+  let To = to_string($message.Email);             //ok
+  let name = to_string($message.FirstName);       //ok
+  let From = to_string("support@braundcard.com"); //ok
+  let Subject = to_string($message.Subject);      //ok
+  let message = to_string($message.Body);         //ok
+  
+  let autorizationBearer = to_string("");
+  let sendgridUrl = to_string("https://api.sendgrid.com/v3/mail/send"); 
+  SendToMailUsingSendGridFunction(To, name, From, Subject, message, autorizationBearer, sendgridUrl) ;
+end
