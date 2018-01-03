@@ -1,0 +1,9 @@
+rule "function dev operation SMS New Account"
+when
+  to_string($message.action) == "sms"
+then
+  let Sid = "place sid";
+  let Token = "place token";
+  let From  = "place form";
+  SendToSMSUsingTwilioFunction(to_string($message.Body), to_string($message.To), From, Sid, Token, "false") ;
+end
