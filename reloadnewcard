@@ -1,5 +1,27 @@
 stage 0
 ======================================================
+rule "camunda function eval Deposit amount " 
+when
+  to_string($message.action) == "reloadcard" or
+  to_string($message.action) == "newcard"
+  
+then
+
+  let url     = "";
+  let dmnKey  = to_string(CamundaDMNgetLatestFunction(url , "amount", "false" ,""));
+
+  let jsonBody = StrSubstitutor("{\"variables\" : {\"amount\" : {\"value\" : \"${amount}\", \"type\" : \"double\" }}}");
+  let risk = to_double (CamundaDMNEvalFunction(jsonBody , url, dmnKey, "false", "")) ;
+  set_field("amountdepositrisk",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"amountdepositrisk ${amountdepositrisk}\", \"tags\": [\"score=${amountdepositrisk}\",\"category=amountdepositrisk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+
+end
+
 
 rule "camunda function eval Deposit Form " 
 when
