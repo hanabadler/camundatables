@@ -1,5 +1,22 @@
 stage 0
 ======================================================
+rule "function BC016 24 hours more than X deposits"
+when
+  to_string($message.action) == "reloadcard" and  
+  to_long(getResultSizeGenericQuery("5a4b974a70c99307476543d8",
+  StrSubstitutor("action:reloadcard And publicToken:${PublicToken}"),"24"))> 2
+then
+  let risk = 20.0;
+  set_field("BC016Risk ",risk);
+
+  let currentScore  = to_double($message.totalscore);
+  set_field("totalscore", currentScore + risk);
+
+  let lHiveartifact = StrSubstitutor("{\"dataType\": \"other\", \"data\": \"BC016  ${BC016Risk}\", \"tags\": [\"score=${BC016Risk}\",\"category=BC016Risk Risk\"]  }");
+  SetJsonDataOnMessageField("hiveartifacts",lHiveartifact);
+end
+
+
 rule "camunda function eval Deposit amount " 
 when
   to_string($message.action) == "reloadcard" or
